@@ -54,7 +54,14 @@ func createIndex(path string, outputDir string) error {
 	}
 
 	title := filepath.Base(path)
-	content := fmt.Sprintf("---\ntitle: %s\n---", title)
+
+	parent := ""
+
+	if dir := filepath.Dir(path); dir != sourceParent {
+		parent = filepath.Base(dir)
+	}
+
+	content := fmt.Sprintf("---\ntitle: %s\n%slayout: %s\n---\n", title, getIndent(parent), "default")
 
 	indexPath := filepath.Join(outputDir, path, "index.md")
 	err := os.MkdirAll(filepath.Dir(indexPath), 0755)
